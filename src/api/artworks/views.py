@@ -1,6 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request, jsonify
-from src.api.artworks.crud import read_artworks_with_filter, create_artwork, get_all_artworks
+from src.api.artworks.crud import read_artworks_with_filter, create_artwork, read_all_artworks
 
 artworks_namespace = Namespace('artworks')
 

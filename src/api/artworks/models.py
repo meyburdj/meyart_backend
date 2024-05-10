@@ -34,7 +34,7 @@ class Artwork(db.Model):
     )
 
     price = db.Column(
-        db.Decimal,
+        db.Numeric,
         unique=False,
         nullable=True
     )
