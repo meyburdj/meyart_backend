@@ -1,0 +1,11 @@
+Flask
+flask-restx
+Flask-Cors
+gunicorn
+Werkzeug
+Flask-SQLAlchemy
+psycopg2-binary
+pydantic
+boto3
+requests
+python-dotenv
