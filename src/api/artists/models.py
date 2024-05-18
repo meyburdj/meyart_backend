@@ -24,6 +24,6 @@ class Artist(db.Model):
 
     artworks = db.relationship('Artwork', backref='artist', lazy=True)
 
-    def __init__(self, name, details):
+    def __init__(self, name, details=''):
         self.name=name
         self.details=details
