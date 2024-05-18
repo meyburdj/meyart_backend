@@ -19,29 +19,68 @@ def recreate_db():
 @cli.command('seed_artists_and_works')
 def seed_artists_and_works():
     """Seeds the database with artists and their works."""
-    # Create and commit the CatGroup to ensure it has an ID
-    artist = Artist(
-        name='Pablo Picasso'
-    )
-    db.session.add(artist)
+    # Artists
+    artist1 = Artist(name="Bearden, Romare")
+    artist2 = Artist(name="Toby, Mark")
+    artist3 = Artist(name="Steckel, Anita")
+    artist4 = Artist(name="Youngerman, Jack")
+
+    db.session.add_all([artist1, artist2, artist3, artist4])
     db.session.commit()
 
-    # Now the artist has an ID, we can create works and reference it
+    # Artworks
     artworks = [
-        Artwork(url='https://cdn.discordapp.com/attachments/1233394404681846784/1233394465876607107/file-3eA7SfA07SCszv41sFrmQi1X.png?ex=662cef9c&is=662b9e1c&hm=290860919dce31050289b0519a7b4bc0691bdb31ae619ef0a9ec0065b074bb65&', 
-            genre='Cuban', price=500, media='sculpture', description="this is a work of art", artist=artist.id),
-        Artwork(url='https://cdn.discordapp.com/attachments/1233394404681846784/1233394465876607107/file-3eA7SfA07SCszv41sFrmQi1X.png?ex=662cef9c&is=662b9e1c&hm=290860919dce31050289b0519a7b4bc0691bdb31ae619ef0a9ec0065b074bb65&', 
-            genre='Cuban', price=500, media='sculpture', description="this is a work of art", artist=artist.id),
-        Artwork(url='https://cdn.discordapp.com/attachments/1233394404681846784/1233394465876607107/file-3eA7SfA07SCszv41sFrmQi1X.png?ex=662cef9c&is=662b9e1c&hm=290860919dce31050289b0519a7b4bc0691bdb31ae619ef0a9ec0065b074bb65&', 
-            genre='Cuban', price=500, media='sculpture', description="this is a work of art", artist=artist.id),
-        Artwork(url='https://cdn.discordapp.com/attachments/1233394404681846784/1233394465876607107/file-3eA7SfA07SCszv41sFrmQi1X.png?ex=662cef9c&is=662b9e1c&hm=290860919dce31050289b0519a7b4bc0691bdb31ae619ef0a9ec0065b074bb65&', 
-            genre='Cuban', price=500, media='sculpture', description="this is a work of art", artist=artist.id),
-       
+        Artwork(url="https://i.ibb.co/1dsq3Fg/sm-Bearden20220912-114438.jpg",
+                title="Black Enterprise",
+                media="Mixed Media",
+                size="100x100 cm",
+                price=1200,
+                genre="Cubism",
+                information="An important piece from the artist's later period.",
+                quantity=1,
+                artist_id=artist1.id),
+        Artwork(url="https://i.ibb.co/9sKWq10/med-Bearden-Dancer20220927-122720-1.jpg",
+                title="Dancer",
+                media="Oil on Canvas",
+                size="90x90 cm",
+                price=1500,
+                genre="Modernism",
+                information="Captures the dynamic movement of a dancer.",
+                quantity=1,
+                artist_id=artist1.id),
+        Artwork(url="https://i.ibb.co/48PSfqt/med-Tobey-Grand-Parade.jpg",
+                title="Grand Parade",
+                media="Watercolor",
+                size="80x80 cm",
+                price=1000,
+                genre="Abstract",
+                information="A vibrant and colorful abstraction.",
+                quantity=1,
+                artist_id=artist2.id),
+        Artwork(url="https://i.ibb.co/sPn0tVm/med-Steckel20220919-142503-1.jpg",
+                title="Giant Horse",
+                media="Sculpture",
+                size="200x200 cm",
+                price=2000,
+                genre="Sculpture",
+                information="A massive sculpture dominating the space it occupies.",
+                quantity=1,
+                artist_id=artist3.id),
+        Artwork(url="https://i.ibb.co/vqzgwQs/med-Youngerman-galaxy-Apple-Green19-75-20221003-122224.jpg",
+                title="Galaxy: Apple Green",
+                media="Acrylic on Canvas",
+                size="95x95 cm",
+                price=1100,
+                genre="Abstract Expressionism",
+                information="An expressive piece evoking the cosmos.",
+                quantity=1,
+                artist_id=artist4.id)
     ]
+
     db.session.add_all(artworks)
     db.session.commit()
     
-    click.echo(f"Added artowrks to database under artist ID {artist.id}.")
+    click.echo("Database seeded with initial artists and artworks.")
 
 if __name__ == "__main__":
     cli()
