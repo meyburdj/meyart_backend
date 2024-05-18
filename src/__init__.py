@@ -3,6 +3,8 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 db = SQLAlchemy()
 cors = CORS()
@@ -27,6 +29,17 @@ def create_app(config=None, script_info=None):
     # set up extensions
     db.init_app(app)
     cors.init_app(app, resources={r"*": {"origins": "*"}})
+
+    # Flask-Admin setup
+    admin = Admin(app, name='Meyart Gallery Admin', template_mode='bootstrap3')
+    
+    # Import models here to avoid circular imports
+    from src.api.artists.models import Artist
+    from src.api.artworks.models import Artwork
+    
+    # Add administrative views here
+    admin.add_view(ModelView(Artist, db.session))
+    admin.add_view(ModelView(Artwork, db.session))
 
     # register api
     from src.api import api
