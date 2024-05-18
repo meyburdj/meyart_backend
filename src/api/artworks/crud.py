@@ -3,6 +3,9 @@ from sqlalchemy.exc import IntegrityError
 from src import db
 from .models import Artwork
 from sqlalchemy.orm import load_only
+from sqlalchemy.orm import joinedload
+from ..artists.models import Artist
+
 
 def create_artwork(url, title, media, size, price, genre, quantity, information, artist_id):
     """Create a new artwork."""
@@ -28,45 +31,46 @@ def create_artwork(url, title, media, size, price, genre, quantity, information,
 
 def read_all_artworks():
     """Retrieve all artworks from the database."""
-    return Artwork.query.all()
+    return Artwork.query.options(joinedload(Artwork.artist)).all()
 
 
 def read_artwork(artwork_id):
     """Retrieve a specific artwork by its ID."""
-    return Artwork.query.get(artwork_id)
+    return Artwork.query.options(joinedload(Artwork.artist)).get(artwork_id)
+
 
 def read_artworks_with_filter(filters, attributes):
     """
     Retrieves artworks based on filtering criteria and specified attributes.
     
     :param filters: Dictionary with filtering criteria 
-        (e.g., {'artist': 'Pablo Picasso', 'media': 'oil'}).
+        (e.g., {'genre': 'Cubism', 'price': 500}).
     :param attributes: List of attributes to include in the returned dictionaries 
-        (e.g., ['id', 'artist', 'media', 'price']).
+        (e.g., ['id', 'url', 'title', 'media', 'price']).
     :return: List of dictionaries containing specified attributes of artworks 
     that match the filtering criteria.
     """
+    # Start constructing the query
     query = db.session.query(Artwork)
     
-    # Apply filters dynamically
+    # Dynamically add filters to the query
     for key, value in filters.items():
         if hasattr(Artwork, key):
             query = query.filter(getattr(Artwork, key) == value)
     
-    # Restrict query to only load specified attributes
+    # Dynamically set only the requested columns if attributes are specified
     if attributes:
-        query = query.options(load_only(*attributes))
-    
-    # Execute query and fetch results
+        selected_columns = [getattr(Artwork, attr) for attr in attributes if hasattr(Artwork, attr)]
+        query = db.session.query(*selected_columns)
+        for key, value in filters.items():
+            if hasattr(Artwork, key):
+                query = query.filter(getattr(Artwork, key) == value)
+
+    # Execute the query and fetch results
     artworks = query.all()
-    
-    # Convert results to list of dictionaries
-    result = []
-    for artwork in artworks:
-        result_dict = {attr: getattr(artwork, attr) for attr in attributes if hasattr(artwork, attr)}
-        result.append(result_dict)
-    
-    return result
+
+    return artworks
+
 
 
 def update_artwork(artwork_id, **kwargs):
