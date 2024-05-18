@@ -15,7 +15,8 @@ artwork_model = artworks_namespace.model('Artwork', {
     'genre': fields.String(description='Genre of the artwork'),
     'quantity': fields.Integer(description='Available quantity of the artwork'),
     'information': fields.String(description='Additional information about the artwork'),
-    'artist_id': fields.Integer(required=True, description='ID of the artist who created the artwork')
+    'artist_id': fields.Integer(required=True, description='ID of the artist who created the artwork'),
+    'artist_name': fields.String(attribute='artist.name')
 })
 
 class ArtworkList(Resource):
@@ -29,14 +30,14 @@ class ArtworkList(Resource):
         if attributes:
             attribute_keys = attributes.split(',')
         else:
-            attribute_keys = ['id', 'url', 'title', 'media', 'size', 'price', 'genre', 'quantity', 'information', 'artist_id']
+            attribute_keys = ['id', 'url', 'title', 'media', 'size', 'price', 'genre', 'quantity', 'information', 'artist_id', 'artist_name']
 
         # Determine if query parameters are present
         if query_params:
             filtered_artworks = read_artworks_with_filter(query_params, attribute_keys)
             return filtered_artworks, 200
         else:
-            all_artworks = get_all_artworks()
+            all_artworks = read_all_artworks()
             return all_artworks, 200
 
     @artworks_namespace.expect(artwork_model, validate=True)
