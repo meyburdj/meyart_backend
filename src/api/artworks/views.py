@@ -1,6 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request, jsonify
-from src.api.artworks.crud import read_artworks_with_filter, create_artwork, read_all_artworks
+from src.api.artworks.crud import read_artworks_with_filter, create_artwork, read_all_artworks, read_artwork
 
 artworks_namespace = Namespace('artworks')
 
@@ -11,6 +11,7 @@ artwork_model = artworks_namespace.model('Artwork', {
     'title': fields.String(required=True, description='Title of the artwork'),
     'media': fields.String(description='Media used in the artwork'),
     'size': fields.String(description='Size of the artwork'),
+    'date': fields.Integer(description='Date when the artwork was produced'),
     'price': fields.Float(description='Price of the artwork'),
     'genre': fields.String(description='Genre of the artwork'),
     'quantity': fields.Integer(description='Available quantity of the artwork'),
@@ -19,26 +20,39 @@ artwork_model = artworks_namespace.model('Artwork', {
     'artist_name': fields.String(attribute='artist.name')
 })
 
+class Artwork(Resource):
+    @artworks_namespace.marshal_with(artwork_model)
+    def get(self, id):
+        artwork = read_artwork(id)
+        if artwork:
+            return artwork, 200
+        else:
+            artworks_namespace.abort(404, f"Artwork with id {id} not found")
+
 class ArtworkList(Resource):
     @artworks_namespace.marshal_list_with(artwork_model)
     def get(self):
         """Returns artworks. If query parameters are provided, filters based on those parameters. Otherwise, returns all artworks."""
         query_params = request.args.to_dict()
         attributes = query_params.pop('attributes', None)
+        print('attributes', attributes)
 
         # Check for the 'attributes' parameter
         if attributes:
+            print('im in if attributes', attributes)
             attribute_keys = attributes.split(',')
+            print('attribute_keys', attribute_keys)
         else:
-            attribute_keys = ['id', 'url', 'title', 'media', 'size', 'price', 'genre', 'quantity', 'information', 'artist_id', 'artist_name']
+            attribute_keys = ['id', 'url', 'date', 'title', 'media', 'size', 'price', 'genre', 'quantity', 'information', 'artist_id', 'artist_name']
 
         # Determine if query parameters are present
         if query_params:
+            print('query_params', query_params, attribute_keys)
             filtered_artworks = read_artworks_with_filter(query_params, attribute_keys)
             return filtered_artworks, 200
         else:
-            all_artworks = read_all_artworks()
-            return all_artworks, 200
+            filtered_artworks = read_artworks_with_filter({}, attribute_keys)
+            return filtered_artworks, 200
 
     @artworks_namespace.expect(artwork_model, validate=True)
     @artworks_namespace.marshal_with(artwork_model, code=201)
@@ -54,3 +68,5 @@ class ArtworkList(Resource):
             artworks_namespace.abort(500, str(e))
 
 artworks_namespace.add_resource(ArtworkList, '/')
+artworks_namespace.add_resource(Artwork, '/<int:id>')
+

@@ -38,6 +38,7 @@ def seed_artists_and_works():
                 genre="Cubism",
                 information="An important piece from the artist's later period.",
                 quantity=1,
+                date=1977,
                 artist_id=artist1.id),
         Artwork(url="https://i.ibb.co/9sKWq10/med-Bearden-Dancer20220927-122720-1.jpg",
                 title="Dancer",
@@ -47,6 +48,7 @@ def seed_artists_and_works():
                 genre="Modernism",
                 information="Captures the dynamic movement of a dancer.",
                 quantity=1,
+                date=1985,
                 artist_id=artist1.id),
         Artwork(url="https://i.ibb.co/48PSfqt/med-Tobey-Grand-Parade.jpg",
                 title="Grand Parade",
@@ -56,6 +58,7 @@ def seed_artists_and_works():
                 genre="Abstract",
                 information="A vibrant and colorful abstraction.",
                 quantity=1,
+                date=105,
                 artist_id=artist2.id),
         Artwork(url="https://i.ibb.co/sPn0tVm/med-Steckel20220919-142503-1.jpg",
                 title="Giant Horse",
@@ -65,6 +68,7 @@ def seed_artists_and_works():
                 genre="Sculpture",
                 information="A massive sculpture dominating the space it occupies.",
                 quantity=1,
+                date=1032,
                 artist_id=artist3.id),
         Artwork(url="https://i.ibb.co/vqzgwQs/med-Youngerman-galaxy-Apple-Green19-75-20221003-122224.jpg",
                 title="Galaxy: Apple Green",
@@ -74,6 +78,7 @@ def seed_artists_and_works():
                 genre="Abstract Expressionism",
                 information="An expressive piece evoking the cosmos.",
                 quantity=1,
+                date=2013,
                 artist_id=artist4.id)
     ]
 

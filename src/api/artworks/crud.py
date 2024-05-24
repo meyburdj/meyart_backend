@@ -36,7 +36,7 @@ def read_all_artworks():
 
 def read_artwork(artwork_id):
     """Retrieve a specific artwork by its ID."""
-    return Artwork.query.options(joinedload(Artwork.artist)).get(artwork_id)
+    return db.session.query(Artwork).options(joinedload(Artwork.artist)).get(artwork_id)
 
 
 def read_artworks_with_filter(filters, attributes):
@@ -60,6 +60,7 @@ def read_artworks_with_filter(filters, attributes):
     
     # Dynamically set only the requested columns if attributes are specified
     if attributes:
+        print('im in attributes')
         selected_columns = [getattr(Artwork, attr) for attr in attributes if hasattr(Artwork, attr)]
         query = db.session.query(*selected_columns)
         for key, value in filters.items():

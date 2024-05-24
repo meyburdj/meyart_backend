@@ -59,13 +59,18 @@ class Artwork(db.Model):
         default=1
     )
 
+    date=db.Column(
+        db.Integer
+    )
+
     artist_id=db.Column(
         db.Integer,
         db.ForeignKey('artists.id'),
         nullable=False
     )
 
-    def __init__(self, url, title, media, size, price, genre, quantity, information, artist_id):
+
+    def __init__(self, url, title, media, size, price, genre, quantity, information, artist_id, date):
         self.url=url
         self.title=title
         self.media=media
@@ -75,6 +80,7 @@ class Artwork(db.Model):
         self.quantity=quantity
         self.information=information
         self.artist_id=artist_id
+        self.date=date
 
 
 
