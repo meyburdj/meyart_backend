@@ -1,4 +1,7 @@
 from src import db
+from src.api.artists.models import Artist
+from sqlalchemy.ext.hybrid import hybrid_property
+
 
 class Artwork(db.Model):
     __tablename__="artworks"
@@ -69,6 +72,10 @@ class Artwork(db.Model):
         nullable=False
     )
 
+    @property
+    def artist_name(self):
+        artist = Artist.query.get(self.artist_id)
+        return artist.name if artist else 'Unknown'
 
     def __init__(self, url, title, media, size, price, genre, quantity, information, artist_id, date):
         self.url=url
